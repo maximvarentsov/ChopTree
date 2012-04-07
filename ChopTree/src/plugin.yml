@@ -1,8 +1,12 @@
-name: ChopTree
+name: ChopTree2
 main: me.Iso.ChopTree.ChopTree
-version: 1.2
+version: 2.0
+author: ellbristow
 commands:
   ChopTree:
     description: Control the plugin
     aliases:
         ct
+permissions:
+  choptree.chop:
+    description: Player can chop trees in one chop
