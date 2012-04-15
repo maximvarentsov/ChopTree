@@ -66,7 +66,7 @@ public class ChopTreeBlockListener implements Listener {
             return false;
         }
         //player.updateInventory();
-        updateInventory(player); //bergkillers update inventory method
+        //updateInventory(player); //bergkillers update inventory method
         return true;
     }
 	

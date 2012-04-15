@@ -16,8 +16,6 @@
 # LogsMoveDown: Are all item drops dropped by the chopped log (rather than by each 'POP'ed log)?
 # 
 # OnlyTrees: Does the 'POP' only work if the player chopped a tree (rather than ANY pile of logs)?
-# 
-# EnableOverride: This does something... I don't know what yet! :P
 
 ActiveByDefault: true
 UseAnything: false

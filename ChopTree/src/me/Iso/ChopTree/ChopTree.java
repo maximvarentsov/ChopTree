@@ -51,7 +51,7 @@ public class ChopTree extends JavaPlugin {
                     return false;
                 }
                 sender.sendMessage(ChatColor.GOLD + "ChopTree2 v" + getDescription().getVersion() + " : Rewritten by ellbristow");
-                sender.sendMessage(ChatColor.GRAY + "===========================================");
+                sender.sendMessage(ChatColor.GRAY + "===================================");
                 sender.sendMessage(ChatColor.GOLD + "ActiveByDefault : " + ChatColor.GRAY + defaultActive);
                 sender.sendMessage(ChatColor.GOLD + "UseAnything : " + ChatColor.GRAY + useAnything);
                 sender.sendMessage(ChatColor.GOLD + "MoreDamageToTools : " + ChatColor.GRAY + moreDamageToTools);
