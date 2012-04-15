@@ -152,7 +152,6 @@ public class ChopTreeBlockListener implements Listener {
         return block;
     }
 
-    @SuppressWarnings("static-access")
     public boolean isTree (Block block, Player player, Block first) {
 
         if (!plugin.options.contains("OnlyTrees")) return true;
@@ -214,7 +213,7 @@ public class ChopTreeBlockListener implements Listener {
         ItemStack item = new ItemStack (1, 1, (short) 0, null);
         item.setAmount(1);
 
-        Block down = block;
+        Block down;
         List <Block> downs = new LinkedList <Block> ();
         for (int counter = 0; counter < blocks.size(); counter++) {
             block = blocks.get(counter);
@@ -264,8 +263,7 @@ public class ChopTreeBlockListener implements Listener {
         plugin.trees.put(player, blockarray);
 
     }
-	
-    @SuppressWarnings("static-access")
+    
     public boolean breaksTool (Player player, ItemStack item) {
 
         if (plugin.options.contains("EnableOverride")) {
@@ -342,7 +340,6 @@ public class ChopTreeBlockListener implements Listener {
         return false;
     }
 	
-    @SuppressWarnings("static-access")
     public boolean denyPermission (Player player) {
         //Permissions check
         if (!player.hasPermission("choptree.chop")) {
@@ -370,7 +367,6 @@ public class ChopTreeBlockListener implements Listener {
         return false;
     }
 	
-    @SuppressWarnings("static-access")
     public boolean denyItem (Player player) {
 
         if (plugin.options.contains("EnableOverride")) {
@@ -392,7 +388,6 @@ public class ChopTreeBlockListener implements Listener {
         return false;
     }
 	
-    @SuppressWarnings("static-access")
     public boolean interruptWhenBreak (Player player) {
 
         if (plugin.options.contains("EnableOverride")) {
