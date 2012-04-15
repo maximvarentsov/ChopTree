@@ -39,7 +39,7 @@ public class ChopTreeBlockListener implements Listener {
             event.setCancelled(true);
 
             if (Chop (event.getBlock(), event.getPlayer(), event.getBlock().getWorld())) {
-                if (!plugin.options.contains("MoreDamageToTools")) {
+                if (!plugin.moreDamageToTools) {
                     if (breaksTool(event.getPlayer(), event.getPlayer().getItemInHand())) {
                         event.getPlayer().getInventory().clear(event.getPlayer().getInventory().getHeldItemSlot());
                     }
@@ -57,7 +57,7 @@ public class ChopTreeBlockListener implements Listener {
         if (isTree(highest, player, block)) {
             getBlocksToChop(block, highest, blocks);
             //Chop the blocks
-            if (plugin.options.contains("LogsMoveDown")) {
+            if (plugin.logsMoveDown) {
                 moveDownLogs(block, blocks, world, player);
             } else {
                 popLogs(block, blocks, world, player);
@@ -75,6 +75,7 @@ public class ChopTreeBlockListener implements Listener {
     * http://forums.bukkit.org/threads/updating-the-inventory-using-craftbukkit-with-bukkit.27455/
     */
 	
+    @Deprecated
     public static void updateInventory(Player p) {
         CraftPlayer c = (CraftPlayer) p;
         for (int i = 0;i < 36;i++) 
@@ -154,13 +155,7 @@ public class ChopTreeBlockListener implements Listener {
 
     public boolean isTree (Block block, Player player, Block first) {
 
-        if (!plugin.options.contains("OnlyTrees")) return true;
-
-        if (plugin.options.contains("EnableOverride")) {
-            if (player.hasPermission("choptree.override.onlytrees")) {
-                return true;
-            }
-        }
+        if (!plugin.onlyTrees) return true;
 
         if (plugin.trees.containsKey(player)) {
             Block[] blockarray = plugin.trees.get(player);
@@ -200,10 +195,10 @@ public class ChopTreeBlockListener implements Listener {
             block.setType(Material.AIR);
             world.dropItem(block.getLocation(), item);
 
-            if (plugin.options.contains("MoreDamageToTools")) {
+            if (plugin.moreDamageToTools) {
                 if (breaksTool(player, player.getItemInHand())) {
                     player.getInventory().clear(player.getInventory().getHeldItemSlot());
-                    if (interruptWhenBreak(player)) break;
+                    if (plugin.interruptIfToolBreaks) break;
                 }
             }			
         }
@@ -229,7 +224,7 @@ public class ChopTreeBlockListener implements Listener {
                 block.setType(Material.AIR);
                 world.dropItem(block.getLocation(), item);
 
-                if (plugin.options.contains("MoreDamageToTools")) {
+                if (plugin.moreDamageToTools) {
                     if (breaksTool(player, player.getItemInHand())) {
                         player.getInventory().clear(player.getInventory().getHeldItemSlot());
                     }
@@ -246,7 +241,7 @@ public class ChopTreeBlockListener implements Listener {
                 world.dropItem(block.getLocation(), item);
                 downs.remove(block);
 
-                if (plugin.options.contains("MoreDamageToTools")) {
+                if (plugin.moreDamageToTools) {
                     if (breaksTool(player, player.getItemInHand())) {
                         player.getInventory().clear(player.getInventory().getHeldItemSlot());
                     }
@@ -265,12 +260,6 @@ public class ChopTreeBlockListener implements Listener {
     }
     
     public boolean breaksTool (Player player, ItemStack item) {
-
-        if (plugin.options.contains("EnableOverride")) {
-            if (player.hasPermission("choptree.override.moredamagetotools")) {
-                return false;
-            }
-        }
 
         if (item != null) {
             if (isTool(item.getTypeId())) {
@@ -350,53 +339,33 @@ public class ChopTreeBlockListener implements Listener {
 
     public boolean denyActive (Player player) {
 
-        if (plugin.players.containsKey(player.getName())) {
-            //If players has the player mapped as "false"
-            if (!plugin.players.get(player.getName())) {
-                return true;
-            }
-        } else {
-            //Put player
-            if (plugin.options.contains("ActiveByDefault")) {
-                plugin.players.put(player.getName(), true);
-            } else {
-                    plugin.players.put(player.getName(), false);
-                return true;
-            }
+        ChopTreePlayer ctPlayer = new ChopTreePlayer(plugin, player.getName());
+        
+        if (ctPlayer.isActive()) {
+            return false;
         }
-        return false;
+        return true;
     }
 	
     public boolean denyItem (Player player) {
 
-        if (plugin.options.contains("EnableOverride")) {
-            if (player.hasPermission("choptree.override.useanything")) {
-                return false;
-            }
-        }
-
-        if (!plugin.options.contains("UseAnything")) {
+        if (!plugin.useAnything) {
             ItemStack item = player.getItemInHand();
             if (item != null) {
-                if (!plugin.mats.contains(item.getTypeId())) {
-                    return true;
+                for (String tool : plugin.allowedTools) {
+                    if (tool.equalsIgnoreCase(item.getType().name())) {
+                        return false;
+                    }
                 }
-            } else {
-                return true;
             }
+            return true;
         }
         return false;
     }
 	
     public boolean interruptWhenBreak (Player player) {
 
-        if (plugin.options.contains("EnableOverride")) {
-            if (player.hasPermission("choptree.override.interruptiftoolbreaks")) {
-                return false;
-            }
-        }
-
-        if (plugin.options.contains("InterruptIfToolBreaks")) {
+        if (plugin.interruptIfToolBreaks) {
             return true;
         }
         return false;

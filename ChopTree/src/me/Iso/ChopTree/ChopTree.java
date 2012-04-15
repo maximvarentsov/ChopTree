@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
@@ -19,11 +17,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class ChopTree extends JavaPlugin {
     
     private final ChopTreeBlockListener blockListener = new ChopTreeBlockListener(this);
-    public final List <String> options = new LinkedList <String> ();
-    public final List <String> chunks = new LinkedList <String> ();
-    public final List <Integer> mats = new LinkedList <Integer> ();
-    public final List <Player> chunkmsg = new LinkedList <Player> ();
-    public final HashMap<String, Boolean> players = new HashMap<String, Boolean> ();
     public final HashMap<Player, Block[]> trees = new HashMap<Player, Block[]> ();
     private FileConfiguration config;
     protected boolean defaultActive;

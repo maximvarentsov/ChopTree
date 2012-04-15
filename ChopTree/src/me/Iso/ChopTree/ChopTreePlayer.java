@@ -10,6 +10,9 @@ public class ChopTreePlayer {
         plugin = instance;
         active = getSetting("active");
         this.playerName = playerName;
+        if (plugin.playersDb.get(playerName + ".active") == null) {
+            addPlayer();
+        }
     }
     
     public boolean isActive() {
@@ -18,6 +21,8 @@ public class ChopTreePlayer {
     
     public void setActive(boolean setting) {
         active = setting;
+        plugin.playersDb.set(playerName + ".active", setting);
+        plugin.savePlayers();
     }
     
     public void toggleActive() {
@@ -26,6 +31,8 @@ public class ChopTreePlayer {
         } else {
             active = true;
         }
+        plugin.playersDb.set(playerName + ".active", active);
+        plugin.savePlayers();
     }
     
     private boolean getSetting(String setting) {
@@ -34,6 +41,11 @@ public class ChopTreePlayer {
             value = plugin.playersDb.getBoolean(playerName + "." + setting, plugin.defaultActive);
         }
         return value;
+    }
+    
+    private void addPlayer() {
+        plugin.playersDb.set(playerName + ".active", plugin.defaultActive);
+        plugin.savePlayers();
     }
 
 }
