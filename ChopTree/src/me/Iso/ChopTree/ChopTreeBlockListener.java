@@ -3,12 +3,10 @@ package me.Iso.ChopTree;
 import java.lang.reflect.Array;
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.server.Packet103SetSlot;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -65,37 +63,8 @@ public class ChopTreeBlockListener implements Listener {
         } else {
             return false;
         }
-        //player.updateInventory();
-        //updateInventory(player); //bergkillers update inventory method
         return true;
     }
-	
-    /*
-    * From bergerkiller's post on bukkit forum
-    * http://forums.bukkit.org/threads/updating-the-inventory-using-craftbukkit-with-bukkit.27455/
-    */
-	
-    @Deprecated
-    public static void updateInventory(Player p) {
-        CraftPlayer c = (CraftPlayer) p;
-        for (int i = 0;i < 36;i++) 
-        {
-            int nativeindex = i;
-            if (i < 9) 
-            	nativeindex = i + 36;
-            ItemStack olditem =  c.getInventory().getItem(i);
-            net.minecraft.server.ItemStack item = null;
-            if (olditem != null && olditem.getType() != Material.AIR) 
-            {
-                item = new net.minecraft.server.ItemStack(0, 0, 0);
-                item.id = olditem.getTypeId();
-                item.count = olditem.getAmount();
-            }
-            Packet103SetSlot pack = new Packet103SetSlot(0, nativeindex, item);
-            c.getHandle().netServerHandler.sendPacket(pack);
-        }
-    }
-    //************************************************************************************************
 	
     public void getBlocksToChop (Block block, Block highest, List <Block> blocks) {
         while (block.getY() <= highest.getY()) {
@@ -133,6 +102,33 @@ public class ChopTreeBlockListener implements Listener {
             }
             if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST))) {
                 getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST));
+            }
+            // Jungle Gap Bridge
+            if (block.getData() == 3 || block.getData() == 7 || block.getData() == 11 || block.getData() == 15) {
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST, 2));
+                }
+                if (!blocks.contains(block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST, 2))) {
+                    getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST, 2));
+                }
             }
             if (!blocks.contains(block.getRelative(BlockFace.UP)) && block.getRelative(BlockFace.UP).getType() == Material.LOG) {
                 block = block.getRelative(BlockFace.UP);
@@ -192,8 +188,9 @@ public class ChopTreeBlockListener implements Listener {
             block = blocks.get(counter);
             item.setType(block.getType());
             item.setDurability(block.getData());
-            block.setType(Material.AIR);
-            world.dropItem(block.getLocation(), item);
+            block.breakNaturally();
+            if (plugin.popLeaves)
+                popLeaves(block);
 
             if (plugin.moreDamageToTools) {
                 if (breaksTool(player, player.getItemInHand())) {
@@ -201,6 +198,19 @@ public class ChopTreeBlockListener implements Listener {
                     if (plugin.interruptIfToolBreaks) break;
                 }
             }			
+        }
+    }
+    
+    public void popLeaves(Block block) {
+        for(int y = -plugin.leafRadius; y < plugin.leafRadius + 1; y++) {
+            for(int x = -plugin.leafRadius; x < plugin.leafRadius + 1; x++) {
+                for(int z = -plugin.leafRadius; z < plugin.leafRadius + 1; z++) {
+                    Block target = block.getRelative(x, y, z);
+                    if (target.getType().equals(Material.LEAVES)) {
+                        target.breakNaturally();
+                    }
+                }
+            }
         }
     }
 
@@ -235,11 +245,8 @@ public class ChopTreeBlockListener implements Listener {
         for (int counter = 0; counter < downs.size(); counter++) {
             block = downs.get(counter);
             if (isLoneLog(block)) {
-                item.setType(block.getType());
-                item.setDurability(block.getData());
-                block.setType(Material.AIR);
-                world.dropItem(block.getLocation(), item);
                 downs.remove(block);
+                block.breakNaturally();
 
                 if (plugin.moreDamageToTools) {
                     if (breaksTool(player, player.getItemInHand())) {
@@ -248,6 +255,9 @@ public class ChopTreeBlockListener implements Listener {
                 }
             }
         }
+        
+        if (plugin.popLeaves)
+            moveLeavesDown(blocks);
 
         if (plugin.trees.containsKey(player)) {
             plugin.trees.remove(player);
@@ -257,6 +267,28 @@ public class ChopTreeBlockListener implements Listener {
         for (int counter = 0; counter < downs.size(); counter++) blockarray[counter] = downs.get(counter);
         plugin.trees.put(player, blockarray);
 
+    }
+    
+    public void moveLeavesDown(List<Block> blocks) {
+        List<Block> leaves = new LinkedList<Block>();
+        for (Block block: blocks) {
+            for(int y = -plugin.leafRadius; y < plugin.leafRadius + 1; y++) {
+                for(int x = -plugin.leafRadius; x < plugin.leafRadius + 1; x++) {
+                    for(int z = -plugin.leafRadius; z < plugin.leafRadius + 1; z++) {
+                        if (block.getRelative(x, y, z).getType().equals(Material.LEAVES) && !leaves.contains(block.getRelative(x, y, z)))
+                            leaves.add(block.getRelative(x, y, z));
+                    }
+                }
+            }
+        }
+        for (Block block: leaves) {
+            if ((block.getRelative(BlockFace.DOWN).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN).getType().equals(Material.LEAVES)) && (block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LOG)) && (block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LOG))) {
+                block.getRelative(BlockFace.DOWN).setTypeIdAndData(block.getTypeId(), block.getData(), true);
+                block.setType(Material.AIR);
+            } else {
+                block.breakNaturally();
+            }
+        }
     }
     
     public boolean breaksTool (Player player, ItemStack item) {

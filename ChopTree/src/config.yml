@@ -16,6 +16,10 @@
 # LogsMoveDown: Are all item drops dropped by the chopped log (rather than by each 'POP'ed log)?
 # 
 # OnlyTrees: Does the 'POP' only work if the player chopped a tree (rather than ANY pile of logs)?
+# 
+# PopLeaves: Leaves are 'POP'ed when teh tree 'POP's
+# 
+# LeafRadius: How far out should leaves be popped from each log block
 
 ActiveByDefault: true
 UseAnything: false
@@ -24,3 +28,5 @@ MoreDamgeToTools: false
 InterruptIfToolBreaks: false
 LogsMoveDown: false
 OnlyTrees: true
+PopLeaves: false
+LeafRadius: 3

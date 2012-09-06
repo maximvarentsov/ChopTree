@@ -25,6 +25,8 @@ public class ChopTree extends JavaPlugin {
     protected boolean interruptIfToolBreaks;
     protected boolean logsMoveDown;
     protected boolean onlyTrees;
+    protected boolean popLeaves;
+    protected int leafRadius;
     protected String[] allowedTools;
     private File playerFile;
     protected FileConfiguration playersDb;
@@ -50,7 +52,7 @@ public class ChopTree extends JavaPlugin {
                     sender.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
                     return false;
                 }
-                sender.sendMessage(ChatColor.GOLD + "ChopTree2 v" + getDescription().getVersion() + " : Rewritten by ellbristow");
+                sender.sendMessage(ChatColor.GOLD + "ChopTree2 v" + getDescription().getVersion() + " : By ellbristow");
                 sender.sendMessage(ChatColor.GRAY + "===================================");
                 sender.sendMessage(ChatColor.GOLD + "ActiveByDefault : " + ChatColor.GRAY + defaultActive);
                 sender.sendMessage(ChatColor.GOLD + "UseAnything : " + ChatColor.GRAY + useAnything);
@@ -63,6 +65,7 @@ public class ChopTree extends JavaPlugin {
                 } else {
                     sender.sendMessage(ChatColor.GOLD + "AllowedTools : " + ChatColor.GRAY + arrayToString(allowedTools,","));
                 }
+                sender.sendMessage(ChatColor.GOLD + "PopLeaves : " + ChatColor.GRAY + popLeaves);
             } else {
                 if (args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("r")) {
                     // Reload settings from file
@@ -76,7 +79,7 @@ public class ChopTree extends JavaPlugin {
                     if (args.length == 1) {
                         // List toggleable options
                         sender.sendMessage(ChatColor.RED + "You must specify an option to toggle!");
-                        sender.sendMessage(ChatColor.GRAY + "(ActiveByDefault|UseAnything|MoreDamageToTools|InterruptIfToolBreaks|LogsMoveDown|OnlyTrees)");
+                        sender.sendMessage(ChatColor.GRAY + "(ActiveByDefault|UseAnything|MoreDamageToTools|InterruptIfToolBreaks|LogsMoveDown|OnlyTrees|PopLeaves)");
                         return false;
                     } else {
                         // Toggle Specific Option
@@ -138,6 +141,19 @@ public class ChopTree extends JavaPlugin {
                                 config.set("OnlyTrees", true);
                             }
                             sender.sendMessage(ChatColor.GOLD + "OnlyTrees set to : " + ChatColor.GRAY + onlyTrees);
+                        } else if (args[1].equalsIgnoreCase("PopLeaves")) {
+                            if (popLeaves) {
+                                popLeaves = false;
+                                config.set("PopLeaves", false);
+                            } else {
+                                popLeaves = true;
+                                config.set("PopLeaves", true);
+                            }
+                            sender.sendMessage(ChatColor.GOLD + "PopLeaves set to : " + ChatColor.GRAY + popLeaves);
+                        } else {
+                            sender.sendMessage(ChatColor.RED + "I can't find a setting called " + ChatColor.WHITE + args[1] + ChatColor.RED + "!");
+                            sender.sendMessage(ChatColor.GRAY + "(ActiveByDefault|UseAnything|MoreDamageToTools|InterruptIfToolBreaks|LogsMoveDown|OnlyTrees|PopLeaves)");
+                            return true;
                         }
                         saveConfig();
                     }
@@ -159,6 +175,7 @@ public class ChopTree extends JavaPlugin {
     }
     
     public void loadConfig() {
+        reloadConfig();
         config = getConfig();
         defaultActive = config.getBoolean("ActiveByDefault", true);
         config.set("ActiveByDefault", defaultActive);
@@ -174,6 +191,10 @@ public class ChopTree extends JavaPlugin {
         config.set("LogsMoveDown", logsMoveDown);
         onlyTrees = config.getBoolean("OnlyTrees", true);
         config.set("OnlyTrees", onlyTrees);
+        popLeaves = config.getBoolean("PopLeaves", false);
+        config.set("PopLeaves", popLeaves);
+        leafRadius = config.getInt("LeafRadius", 3);
+        config.set("LeafRadius", leafRadius);
         saveConfig();
     }
     
