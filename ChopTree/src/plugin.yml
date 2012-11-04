@@ -1,15 +1,18 @@
 name: ChopTree2
 main: me.Iso.ChopTree.ChopTree
-version: 2.2.0
+version: 2.2.1
 author: ellbristow
+softdepend: [Res, Towny, MyChunk, WorldGuard]
 commands:
   choptree:
     description: Main plugin controls
     aliases:
-        ct
+      ct
   togglechop:
     description: Toggle ChopTree
     permission: choptree.commands.togglechop
+    aliases:
+      tc
 permissions:
   choptree.*:
     description: Can chop and use all commands

@@ -8,10 +8,11 @@ public class ChopTreePlayer {
     
     public ChopTreePlayer(ChopTree instance, String playerName) {
         plugin = instance;
-        active = getSetting("active");
         this.playerName = playerName;
+        active = getSetting("active");
         if (plugin.playersDb.get(playerName + ".active") == null) {
             addPlayer();
+            active = plugin.defaultActive;
         }
     }
     

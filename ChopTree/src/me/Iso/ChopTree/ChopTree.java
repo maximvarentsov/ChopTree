@@ -159,6 +159,14 @@ public class ChopTree extends JavaPlugin {
                     }
                 }
             }
+        } else if (commandLabel.equalsIgnoreCase("ToggleChop") || commandLabel.equalsIgnoreCase("tc")) {
+            ChopTreePlayer ctPlayer = new ChopTreePlayer(this, sender.getName());
+            ctPlayer.toggleActive();
+            if (ctPlayer.isActive()) {
+                sender.sendMessage(ChatColor.GOLD + "ChopeTree Activated!");
+            } else {
+                sender.sendMessage(ChatColor.GOLD + "ChopeTree Deactivated!");
+            }
         }
         return true;
     }
