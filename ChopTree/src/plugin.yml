@@ -1,6 +1,6 @@
 name: ChopTree2
 main: me.Iso.ChopTree.ChopTree
-version: 2.2.1
+version: 2.2.2
 author: ellbristow
 softdepend: [Res, Towny, MyChunk, WorldGuard]
 commands:
