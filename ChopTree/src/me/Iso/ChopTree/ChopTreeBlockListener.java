@@ -29,7 +29,7 @@ public class ChopTreeBlockListener implements Listener {
         if (event.isCancelled()) return;
 		
         Block block = event.getBlock();
-        if (block.getType() == Material.LOG) {
+        if (block.getType() == Material.LOG || block.getType() == Material.LOG_2) {
             if (denyPermission(event.getPlayer())) return;
             if (denyActive(event.getPlayer())) return;
             if (denyItem(event.getPlayer())) return;
@@ -130,22 +130,56 @@ public class ChopTreeBlockListener implements Listener {
                     getBranches(block, blocks, block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST, 2));
                 }
             }
-            if (!blocks.contains(block.getRelative(BlockFace.UP)) && block.getRelative(BlockFace.UP).getType() == Material.LOG) {
+            if (!blocks.contains(block.getRelative(BlockFace.UP)) && block.getRelative(BlockFace.UP).getType() == Material.LOG || block.getRelative(BlockFace.UP).getType() == Material.LOG_2) {
                 block = block.getRelative(BlockFace.UP);
             } else break;
         }
     }
 	
     public void getBranches(Block block, List<Block> blocks, Block other) {
-        if (!blocks.contains(other) && other.getType() == Material.LOG) {
+        if (!blocks.contains(other) && (other.getType() == Material.LOG || other.getType() == Material.LOG_2)) {
             getBlocksToChop(other, getHighestLog(other), blocks);
         }
     }
 	
     public Block getHighestLog(Block block) {
-        while (block.getRelative(BlockFace.UP).getType() == Material.LOG) {
-            block = block.getRelative(BlockFace.UP);
+        boolean isLog = true;
+        while (isLog) {
+            if (
+                block.getRelative(BlockFace.UP).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.LOG_2) ||
+                block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.LOG_2)
+              ) {
+                if (block.getRelative(BlockFace.UP).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_EAST);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH_WEST);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_EAST);
+                } else if (block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.LOG) || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST).getType().equals(Material.LOG_2)) {
+                    block = block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH_WEST);
+                }
+            } else {
+                isLog = false;
+            }
         }
+        
         return block;
     }
 
@@ -161,20 +195,30 @@ public class ChopTreeBlockListener implements Listener {
             }
         }
         int counter = 0;
-        if (block.getRelative(BlockFace.UP).getType() == Material.LEAVES) counter++;
-        if (block.getRelative(BlockFace.DOWN).getType() == Material.LEAVES) counter++;
-        if (block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES) counter++;
-        if (block.getRelative(BlockFace.EAST).getType() == Material.LEAVES) counter++;
-        if (block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES) counter++;
-        if (block.getRelative(BlockFace.WEST).getType() == Material.LEAVES) counter++;
+        if (block.getRelative(BlockFace.UP).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.DOWN).getType() == Material.LEAVES || block.getRelative(BlockFace.DOWN).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES || block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.EAST).getType() == Material.LEAVES || block.getRelative(BlockFace.EAST).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES || block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES_2) counter++;
+        if (block.getRelative(BlockFace.WEST).getType() == Material.LEAVES || block.getRelative(BlockFace.WEST).getType() == Material.LEAVES_2) counter++;
         if (counter >= 2) return true;
         if (block.getData() == (byte) 1) {
             block = block.getRelative(BlockFace.UP);
-            if (block.getRelative(BlockFace.UP).getType() == Material.LEAVES) counter++;
-            if (block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES) counter++;
-            if (block.getRelative(BlockFace.EAST).getType() == Material.LEAVES) counter++;
-            if (block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES) counter++;
-            if (block.getRelative(BlockFace.WEST).getType() == Material.LEAVES) counter++;
+            if (block.getRelative(BlockFace.UP).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.UP).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType() == Material.LEAVES || block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES || block.getRelative(BlockFace.NORTH).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.EAST).getType() == Material.LEAVES || block.getRelative(BlockFace.EAST).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES || block.getRelative(BlockFace.SOUTH).getType() == Material.LEAVES_2) counter++;
+            if (block.getRelative(BlockFace.WEST).getType() == Material.LEAVES || block.getRelative(BlockFace.WEST).getType() == Material.LEAVES_2) counter++;
             if (counter >= 2) return true;
         }
         return false;
@@ -206,7 +250,7 @@ public class ChopTreeBlockListener implements Listener {
             for(int x = -plugin.leafRadius; x < plugin.leafRadius + 1; x++) {
                 for(int z = -plugin.leafRadius; z < plugin.leafRadius + 1; z++) {
                     Block target = block.getRelative(x, y, z);
-                    if (target.getType().equals(Material.LEAVES)) {
+                    if (target.getType().equals(Material.LEAVES) || target.getType().equals(Material.LEAVES_2)) {
                         target.breakNaturally();
                     }
                 }
@@ -223,8 +267,8 @@ public class ChopTreeBlockListener implements Listener {
         for (int counter = 0; counter < blocks.size(); counter++) {
             block = blocks.get(counter);
             down = block.getRelative(BlockFace.DOWN);
-            if (down.getType() == Material.AIR || down.getType() == Material.LEAVES) {				
-                down.setType(Material.LOG);
+            if (down.getType() == Material.AIR || down.getType() == Material.LEAVES || down.getType() == Material.LEAVES_2) {				
+                down.setType(block.getType());
                 down.setData(block.getData());
                 block.setType(Material.AIR);
                 downs.add(down);
@@ -275,14 +319,14 @@ public class ChopTreeBlockListener implements Listener {
             for(int y = -plugin.leafRadius; y < plugin.leafRadius + 1; y++) {
                 for(int x = -plugin.leafRadius; x < plugin.leafRadius + 1; x++) {
                     for(int z = -plugin.leafRadius; z < plugin.leafRadius + 1; z++) {
-                        if (block.getRelative(x, y, z).getType().equals(Material.LEAVES) && !leaves.contains(block.getRelative(x, y, z)))
+                        if ((block.getRelative(x, y, z).getType().equals(Material.LEAVES) || block.getRelative(x, y, z).getType().equals(Material.LEAVES_2)) && !leaves.contains(block.getRelative(x, y, z)))
                             leaves.add(block.getRelative(x, y, z));
                     }
                 }
             }
         }
         for (Block block: leaves) {
-            if ((block.getRelative(BlockFace.DOWN).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN).getType().equals(Material.LEAVES)) && (block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LOG)) && (block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LOG))) {
+            if ((block.getRelative(BlockFace.DOWN).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN).getType().equals(Material.LEAVES_2)) && (block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LEAVES_2) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LOG) || block.getRelative(BlockFace.DOWN, 2).getType().equals(Material.LOG_2)) && (block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.AIR) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LEAVES) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LEAVES_2) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LOG) || block.getRelative(BlockFace.DOWN, 3).getType().equals(Material.LOG_2))) {
                 block.getRelative(BlockFace.DOWN).setTypeIdAndData(block.getTypeId(), block.getData(), true);
                 block.setType(Material.AIR);
             } else {
@@ -341,7 +385,7 @@ public class ChopTreeBlockListener implements Listener {
     }
 	
     public boolean isLoneLog (Block block) {
-        if (block.getRelative(BlockFace.UP).getType() == Material.LOG) return false;
+        if (block.getRelative(BlockFace.UP).getType() == Material.LOG || block.getRelative(BlockFace.UP).getType() == Material.LOG_2) return false;
         if (block.getRelative(BlockFace.DOWN).getType() != Material.AIR) return false;
         if (hasHorizontalCompany(block)) return false;
         if (hasHorizontalCompany(block.getRelative(BlockFace.UP))) return false;
@@ -350,14 +394,14 @@ public class ChopTreeBlockListener implements Listener {
     }
 	
     public boolean hasHorizontalCompany (Block block) {
-        if (block.getRelative(BlockFace.NORTH).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.NORTH_EAST).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.EAST).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.SOUTH).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.WEST).getType() == Material.LOG) return true;
-        if (block.getRelative(BlockFace.NORTH_WEST).getType() == Material.LOG) return true;
+        if (block.getRelative(BlockFace.NORTH).getType() == Material.LOG || block.getRelative(BlockFace.NORTH).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.NORTH_EAST).getType() == Material.LOG || block.getRelative(BlockFace.NORTH_EAST).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.EAST).getType() == Material.LOG || block.getRelative(BlockFace.EAST).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.LOG || block.getRelative(BlockFace.SOUTH_EAST).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.SOUTH).getType() == Material.LOG || block.getRelative(BlockFace.SOUTH).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.LOG || block.getRelative(BlockFace.SOUTH_WEST).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.WEST).getType() == Material.LOG || block.getRelative(BlockFace.WEST).getType() == Material.LOG_2) return true;
+        if (block.getRelative(BlockFace.NORTH_WEST).getType() == Material.LOG || block.getRelative(BlockFace.NORTH_WEST).getType() == Material.LOG_2) return true;
         return false;
     }
 	
