@@ -1,5 +1,2 @@
-/build/
-/manifest.mf
-/build.xml
-/nbproject/
-/ChopTree/bin/
+*.iml
+.idea\*

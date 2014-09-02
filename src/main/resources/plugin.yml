@@ -1,0 +1,4 @@
+name: ${artifactId}
+main: ${groupId}.${artifactId}
+version: ${version}
+author: Maxim Varentsov <admin@gtn-craft.ru>
